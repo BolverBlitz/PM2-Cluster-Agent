@@ -77,8 +77,34 @@ let GetStatus = function(proc) {
     });
 }
 
+let GetMe = function() {
+    return new Promise(function(resolve, reject) {
+        pm2.connect(function(err) {
+            if (err) {
+                console.error(err)
+                process.exit(2)
+            }
+
+            pm2.list((err, list) => {
+                if (err) {
+                    reject(err);
+                }
+
+                console.log(list[0].pid, process.pid);
+                let Filterd = list.filter(function (el) { return el.pid == process.pid});
+                if(Filterd.length > 0) {
+                    resolve(Filterd[0].pm_id);
+                } else {
+                    reject(`Not running as PM2 Process. PID is: ${process.pid}`);
+                }
+            })
+        })
+    });
+}
+
 module.exports = {
     GetPM2IDByName,
     GetStatus,
-    GetEveryStatus
+    GetEveryStatus,
+    GetMe
 };
