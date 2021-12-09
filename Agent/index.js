@@ -7,9 +7,7 @@ let currentrunningtask = {};
 
 setInterval(async () => {
     PM2.GetEveryStatus().then(function(data) {
-        //console.log(data)
         data.map(function(process) {
-            //console.log(process.pm_id, process.name, process.pm2_env.pm_uptime, process.monit.cpu, process.monit.memory, process.pm2_env.OS, process.pm2_env.status);
             Processes.CreateOrUpdate(process.pm_id, process.name, process.pm2_env.pm_uptime, process.monit.cpu, process.monit.memory, process.pm2_env.OS, process.pm2_env.status);
         });
     });
