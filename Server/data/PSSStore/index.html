@@ -152,8 +152,8 @@ function InitTable () {
     var posting = $.get(`${window.location.href}/list`);
 		posting.done(function(data) {
             let TableObject = {
-                TableHeadData: ["Name", "Node", "CPU", "RAM", "Disk", "Net_Down", "Net_Up", "Actions"],
-                TableData: data.OutArray
+                TableHeadData: ["server","type", "name", "cpu", "mem", "os", "uptime", "state" , "actions"],
+                TableData: data
             }
                 $("#container").html(CreateTable(TableObject));
             });
@@ -198,6 +198,22 @@ function CreateTable({ TableHeadData, TableData }) {
 	});
 
 	return `${TableString}${TableBody.join("")}${TableEnd}`
+}
+
+function RestartServer(pm2id, server) {
+    var posting = $.post(`${window.location.href}/restart`, {
+        pm2id: pm2id,
+        Server: server
+    });
+
+    posting.done(function(data) {
+        setTimeout(InitTable, 1100);
+    });
+
+    posting.fail(function(err) {
+        alert(err)
+    });
+
 }
 
 function timer() {
