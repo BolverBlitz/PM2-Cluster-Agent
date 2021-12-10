@@ -91,7 +91,59 @@ router.post("/restart", limiter, async (reg, res, next) => {
     }
 });
 
+router.post("/reload", limiter, async (reg, res, next) => {
+	try {
+		const value = await CommandShema.validateAsync(reg.body);
+		Tasks.Create(value.Server, "reload", value.pm2id).then(function(task_id){
+			Tasks.Await(task_id, 5).then(function(task_done){
+				Tasks.Delete(task_id).then(function(task_deleted){
+					if(task_deleted.rowCount > 0){
+						logger('info', `${PluginName}: ${task_id} was acknowledged with ${task_done.rows[0].status_completed}`);
+						res.status(200);
+						res.json({
+							status: task_done.rows[0].status_completed,
+						});
+					}
+				}).catch(function(err){
+					console.log(err);
+				});
+			}).catch(function(err){
+				console.log(err);
+			});
+		}).catch(function(err){
+			console.log(err);
+		});
+    } catch (error) {
+        next(error);
+    }
+});
 
+router.post("/stop", limiter, async (reg, res, next) => {
+	try {
+		const value = await CommandShema.validateAsync(reg.body);
+		Tasks.Create(value.Server, "stop", value.pm2id).then(function(task_id){
+			Tasks.Await(task_id, 5).then(function(task_done){
+				Tasks.Delete(task_id).then(function(task_deleted){
+					if(task_deleted.rowCount > 0){
+						logger('info', `${PluginName}: ${task_id} was acknowledged with ${task_done.rows[0].status_completed}`);
+						res.status(200);
+						res.json({
+							status: task_done.rows[0].status_completed,
+						});
+					}
+				}).catch(function(err){
+					console.log(err);
+				});
+			}).catch(function(err){
+				console.log(err);
+			});
+		}).catch(function(err){
+			console.log(err);
+		});
+    } catch (error) {
+        next(error);
+    }
+});
 
 function bytesToSize(bytes, precision, si)
 {

@@ -199,7 +199,7 @@ function CreateTable({ TableHeadData, TableData }) {
 
 	return `${TableString}${TableBody.join("")}${TableEnd}`
 }
-
+/* Function for Buttons */
 function RestartServer(pm2id, server) {
     var posting = $.post(`${window.location.href}/restart`, {
         pm2id: pm2id,
@@ -216,6 +216,38 @@ function RestartServer(pm2id, server) {
 
 }
 
+function ReloadServer(pm2id, server) {
+    var posting = $.post(`${window.location.href}/reload`, {
+        pm2id: pm2id,
+        Server: server
+    });
+
+    posting.done(function(data) {
+        setTimeout(InitTable, 1100);
+    });
+
+    posting.fail(function(err) {
+        alert(err)
+    });
+
+}
+
+function StopServer(pm2id, server) {
+    var posting = $.post(`${window.location.href}/stop`, {
+        pm2id: pm2id,
+        Server: server
+    });
+
+    posting.done(function(data) {
+        setTimeout(InitTable, 1100);
+    });
+
+    posting.fail(function(err) {
+        alert(err)
+    });
+
+}
+/* Helper Functions */
 function timer() {
     if (count <= 0) {
         clearInterval(counter);
@@ -229,7 +261,7 @@ function displayCount(count) {
     var res = count / 100;
     document.getElementById("countdown").innerHTML = res.toPrecision(count.toString().length) + " Sekunden";
 }
-
+/* Mein Code */
 $(document).ready(function(){
     counter = setInterval(timer, 10);
     InitTable();
