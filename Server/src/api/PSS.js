@@ -46,7 +46,7 @@ router.get('/list', limiter, async (reg, res, next) => {
 			data.rows.forEach(element => {
 				element.mem = bytesToSize(element.mem, 2, 1);
 				element.cpu = element.cpu.toFixed(2);
-				element.uptime = uptimetohuman(element.uptime);
+				element.uptime = uptimetohuman(element.uptime, element.state);
 				if(element.state === "online") {
 					element.state = "✅";
 				} else {
@@ -180,24 +180,29 @@ function bytesToSize(bytes, precision, si)
 	}
 }
 
-function uptimetohuman(uptime) {
-	uptime = new Date().getTime() / 1000 - uptime / 1000;
-	const date = new Date(uptime*1000);
-	const days = date.getUTCDate() - 1,
-      hours = date.getUTCHours(),
-      minutes = date.getUTCMinutes(),
-      seconds = date.getUTCSeconds()
-
-
-	let segments = [];
-
-	if (days > 0) segments.push(days + ' Tag' + ((days == 1) ? '' : 'e'));
-	if (hours > 0) segments.push(hours + ' Stunde' + ((hours == 1) ? '' : 'n'));
-	if (minutes > 0) segments.push(minutes + ' Minute' + ((minutes == 1) ? '' : 'n'));
-	if (seconds > 0) segments.push(seconds + ' Sekunde' + ((seconds == 1) ? '' : 'n'));
-
-	const dateString = segments.join(', ');
-	return dateString;
+function uptimetohuman(uptime, state) {
+	if(state !== "online") {
+		return "Offline";
+	}else{
+		uptime = new Date().getTime() / 1000 - uptime / 1000;
+		const date = new Date(uptime*1000);
+		const days = date.getUTCDate() - 1,
+		  hours = date.getUTCHours(),
+		  minutes = date.getUTCMinutes(),
+		  seconds = date.getUTCSeconds()
+	
+	
+		let segments = [];
+	
+		if (days > 0) segments.push(days + ' Tag' + ((days == 1) ? '' : 'e'));
+		if (hours > 0) segments.push(hours + ' Stunde' + ((hours == 1) ? '' : 'n'));
+		if (minutes > 0) segments.push(minutes + ' Minute' + ((minutes == 1) ? '' : 'n'));
+		if (seconds > 0) segments.push(seconds + ' Sekunde' + ((seconds == 1) ? '' : 'n'));
+	
+		const dateString = segments.join(', ');
+		return dateString;
+	}
+	
 }
 
 module.exports = {
