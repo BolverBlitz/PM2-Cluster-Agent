@@ -30,6 +30,12 @@ const CommandShema = Joi.object({
 	pm2id: Joi.number().required().min(0).max(4294967295),
 });
 
+const CommandShemaGit = Joi.object({
+	Server: Joi.string().required().min(0).max(32).regex(/^[a-z\0-9]*$/i),
+	type: Joi.string().required().min(0).max(32).regex(/^[a-z\0-9]*$/i),
+	pm2id: Joi.number().required().min(0).max(4294967295),
+});
+
 const router = express.Router();
 
 router.get('/', limiter, async (reg, res, next) => {
@@ -54,7 +60,7 @@ router.get('/list', limiter, async (reg, res, next) => {
 				}else{
 					element.os = "Unknown";
 				}
-				
+
 				if(element.state === "online") {
 					element.state = "✅";
 				} else {
@@ -67,8 +73,7 @@ router.get('/list', limiter, async (reg, res, next) => {
 					element.actions = `<button title="Reload" onclick="ReloadServer('${element.pm2id}', '${element.server}')">💫</button>` + `<button title="Restart" onclick="RestartServer('${element.pm2id}', '${element.server}')">🔄</button>` + `<button title="Stop" onclick="StopServer('${element.pm2id}', '${element.server}')">❌</button>`;
 				}
 
-				
-				element.operations = `<button title="Delete from DB" onclick="DeleteDB('${element.pm2id}', '${element.server}')">🗑</button>` + `<button title="Pull Update" onclick="GitUpdate('${element.pm2id}', '${element.server}')">♻️</button>`;
+				element.operations = `<button title="Delete from DB" onclick="DeleteDB('${element.pm2id}', '${element.server}')">🗑</button>` + `<button title="Pull Update" onclick="GitUpdate('${element.pm2id}', '${element.server}', '${element.type}')">♻️</button>`;
 			});
 
 			res.send(data.rows);
@@ -91,6 +96,44 @@ router.post("/dbdelete", limiter, async (reg, res, next) => {
             });
 		}).catch(function(err){
 			logger('error', `${PluginName}: Failed to delete process from DB.`);
+		});
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post("/gitupdate", limiter, async (reg, res, next) => {
+    try {
+        const value = await CommandShemaGit.validateAsync(reg.body);
+		Tasks.Create(value.Server, `update_${value.type}`, value.pm2id).then(function(task_id){
+			Tasks.Await(task_id, 5).then(function(task_done){
+				Tasks.Delete(task_id).then(function(task_deleted){
+					if(task_deleted.rowCount > 0){
+						logger('info', `${PluginName}: ${task_id} was acknowledged with ${task_done.rows[0].status_completed}`);
+						res.status(200);
+                        res.json({
+							server: value.Server,
+							pm2id: value.pm2id,
+							status: task_done.rows[0].status_completed,
+                        });
+					}
+				}).catch(function(err){
+					logger('error', `${PluginName}: ${task_id} could not be deleted`);
+				});
+			}).catch(function(err){
+				Tasks.Delete(task_id).then(function(task_deleted){
+					logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+					res.status(510);
+					res.json({
+						error: "Timeout",
+						server: value.Server,
+						pm2id: value.pm2id,
+					});
+				});
+			});
+		
+		}).catch(function(err){
+			logger('error', `${PluginName}: ${task_id} could not be created`);
 		});
     } catch (error) {
         next(error);

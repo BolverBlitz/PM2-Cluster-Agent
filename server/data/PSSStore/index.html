@@ -399,6 +399,35 @@ function DeleteDB(pm2id, server) {
   });
 }
 
+function GitUpdate(pm2id, server, type) {
+    var posting = $.post(`${window.location.href}/gitupdate`, {
+    pm2id: pm2id,
+    Server: server,
+    type: type
+  });
+
+    posting.done(function(data) {
+      setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `GitUpdate: Updated Prosess: <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "success",
+        });
+    });
+
+  posting.fail(function(err) {
+    SnackBar({
+            message: `GitUpdate: Failed to update Prosess: <br>${err.responseJSON.server}.${err.responseJSON.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "danger",
+        });
+  });
+}
+
 function RestartServer(pm2id, server) {
     var posting = $.post(`${window.location.href}/restart`, {
         pm2id: pm2id,
