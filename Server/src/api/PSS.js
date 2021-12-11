@@ -80,11 +80,15 @@ router.post("/restart", limiter, async (reg, res, next) => {
 					logger('error', `${PluginName}: ${task_id} could not be deleted`);
 				});
 			}).catch(function(err){
-				logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
-				res.status(510);
-                res.json({
-					error: "Timeout",
-                });
+				Tasks.Delete(task_id).then(function(task_deleted){
+					logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+					res.status(510);
+					res.json({
+						error: "Timeout",
+						server: value.Server,
+						pm2id: value.pm2id,
+					});
+				});
 			});
 		
 		}).catch(function(err){
@@ -112,11 +116,15 @@ router.post("/reload", limiter, async (reg, res, next) => {
 					logger('error', `${PluginName}: ${task_id} could not be deleted`);
 				});
 			}).catch(function(err){
-				logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
-				res.status(510);
-                res.json({
-					error: "Timeout",
-                });
+				Tasks.Delete(task_id).then(function(task_deleted){
+					logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+					res.status(510);
+					res.json({
+						error: "Timeout",
+						server: value.Server,
+						pm2id: value.pm2id,
+					});
+				});
 			});
 		}).catch(function(err){
 			logger('error', `${PluginName}: ${task_id} could not be created`);
@@ -143,11 +151,15 @@ router.post("/stop", limiter, async (reg, res, next) => {
 					logger('error', `${PluginName}: ${task_id} could not be deleted`);
 				});
 			}).catch(function(err){
-				logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
-				res.status(510);
-                res.json({
-					error: "Timeout",
-                });
+				Tasks.Delete(task_id).then(function(task_deleted){
+					logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+					res.status(510);
+					res.json({
+						error: "Timeout",
+						server: value.Server,
+						pm2id: value.pm2id,
+					});
+				});
 			});
 		}).catch(function(err){
 			logger('error', `${PluginName}: ${task_id} could not be created`);

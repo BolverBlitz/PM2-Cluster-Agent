@@ -309,18 +309,15 @@ h2{
 </body>
 
 <script>
-var Global = {
+const Global = {
     RefreshTime: 20*1000,
-    SnackBox_Timeout: 5*1000
+    SnackBox_Timeout: 400,
+    SnackBox_Location: 'tc',
 }; 		//used to store global Stuff in object
 
 let initial = Global.RefreshTime/10;
 let count = initial;
 let counter; //10 will  run it every 100th of a second
-
-SnackBar({
-    message: "Hi there"
-})
 
 function InitTable () {
     var posting = $.get(`${window.location.href}/list`);
@@ -385,7 +382,13 @@ function RestartServer(pm2id, server) {
     });
 
     posting.fail(function(err) {
-        console.log(err.responseJSON.error)
+        SnackBar({
+            message: `Restart: Acknowledgment ${err.responseJSON.error}: <br>${err.responseJSON.server}.${err.responseJSON.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "warning",
+        });
     });
 
 }
@@ -401,7 +404,13 @@ function ReloadServer(pm2id, server) {
     });
 
     posting.fail(function(err) {
-        console.log(err.responseJSON.error)
+        SnackBar({
+            message: `Reload: Acknowledgment ${err.responseJSON.error}: <br>${err.responseJSON.server}.${err.responseJSON.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "warning",
+        });
     });
 
 }
@@ -417,7 +426,13 @@ function StopServer(pm2id, server) {
     });
 
     posting.fail(function(err) {
-        console.log(err.responseJSON.error)
+        SnackBar({
+            message: `Stop: Acknowledgment ${err.responseJSON.error}: <br>${err.responseJSON.server}.${err.responseJSON.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "warning",
+        });
     });
 
 }
