@@ -59,8 +59,8 @@ setInterval(function(){
                         }else{
                             logger('error', 'Unknown Path to update');
                         }
-                    }
-                    /* PM2 Tasks */
+                    }else{
+                        /* PM2 Tasks */
                     if(task.task.toLowerCase() == "start"){
                         PM2.Start(task.pm2id).then(function(data){
                             Tasks.ACKTask(task.uuid, "Success").then(function(ack){
@@ -149,7 +149,7 @@ setInterval(function(){
                             logger('warning', `Task ${task.uuid} failed to acknowledge type: ${task.task}`);
                         });
                     }
-                    
+                    }
                 }
             });
         }

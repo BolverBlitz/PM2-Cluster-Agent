@@ -87,7 +87,6 @@ router.post("/dbdelete", limiter, async (reg, res, next) => {
     try {
         const value = await CommandShema.validateAsync(reg.body);
 		Processes.Delete(value.Server, value.pm2id).then(data => {
-			console.log(data)
 			res.status(200);
             res.json({
 				server: value.Server,

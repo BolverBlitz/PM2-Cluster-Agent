@@ -407,9 +407,10 @@ function GitUpdate(pm2id, server, type) {
   });
 
     posting.done(function(data) {
+      data.status = data.status.replace(/\n/g, "<br>");
       setTimeout(InitTable, 1100);
         SnackBar({
-            message: `GitUpdate: Updated Prosess: <br>${data.server}.${data.pm2id}`,
+            message: `GitUpdate: Updated Prosess: <br>${data.server}.${data.pm2id}<br>${data.status}`,
             width: "400px",
             speed: Global.SnackBox_Timeout,
             position: Global.SnackBox_Location,
