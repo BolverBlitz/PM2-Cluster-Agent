@@ -24,10 +24,26 @@ setInterval(function(){
                     const TaskParser = task.task.toLowerCase().split('_');
                     if(TaskParser[0] == "update"){
                         if(TaskParser[1] == "process"){
-                            const GitUpdateCommand = exec('git pull');
+                            exec(process.env.APIPath + 'git pull', (err, stdout, stderr) => {
+                                if(err){
+                                    logger('error', err);
+                                }
+                                if(stderr){
+                                    logger('error', stderr);
+                                }
+
+                                console.log(stdout,);
+                            });
                         }else if(TaskParser[1] == "agent"){
-                            exec('git pull', (err, stdout, stderr) => {
-                                console.log(err, stdout, stderr);
+                            exec(process.env.AgentPath + 'git pull', (err, stdout, stderr) => {
+                                if(err){
+                                    logger('error', err);
+                                }
+                                if(stderr){
+                                    logger('error', stderr);
+                                }
+
+                                console.log(stdout,);
                             });
                         }else{
                             logger('error', 'Unknown Path to update');
