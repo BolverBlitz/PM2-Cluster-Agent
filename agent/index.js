@@ -24,7 +24,7 @@ setInterval(function(){
                     const TaskParser = task.task.toLowerCase().split('_');
                     if(TaskParser[0] == "update"){
                         if(TaskParser[1] == "process"){
-                            exec(process.env.APIPath + 'git pull', (err, stdout, stderr) => {
+                            exec(`git -C ${process.env.APIPath} pull`, (err, stdout, stderr) => {
                                 if(err){
                                     logger('error', err);
                                 }
@@ -35,7 +35,7 @@ setInterval(function(){
                                 console.log(stdout,);
                             });
                         }else if(TaskParser[1] == "agent"){
-                            exec(process.env.AgentPath + 'git pull', (err, stdout, stderr) => {
+                            exec(`git -C ${process.env.AgentPath} pull`, (err, stdout, stderr) => {
                                 if(err){
                                     logger('error', err);
                                 }
