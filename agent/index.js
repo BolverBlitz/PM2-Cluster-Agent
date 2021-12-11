@@ -32,7 +32,13 @@ setInterval(function(){
                                     logger('error', stderr);
                                 }
 
-                                console.log(stdout,);
+                                Tasks.ACKTask(task.uuid, stdout).then(function(ack){
+                                    logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
+                                    delete currentrunningtask[task.uuid];
+                                }).catch(function(err){
+                                    logger('warning', `Task ${task.uuid} failed to acknowledge type: ${task.task}`);
+                                });
+
                             });
                         }else if(TaskParser[1] == "agent"){
                             exec(`git -C ${process.env.AgentPath} pull`, (err, stdout, stderr) => {
@@ -43,7 +49,12 @@ setInterval(function(){
                                     logger('error', stderr);
                                 }
 
-                                console.log(stdout,);
+                                Tasks.ACKTask(task.uuid, stdout).then(function(ack){
+                                    logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
+                                    delete currentrunningtask[task.uuid];
+                                }).catch(function(err){
+                                    logger('warning', `Task ${task.uuid} failed to acknowledge type: ${task.task}`);
+                                });
                             });
                         }else{
                             logger('error', 'Unknown Path to update');
