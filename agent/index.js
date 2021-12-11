@@ -29,6 +29,13 @@ setInterval(function(){
                             const GitUpdateCommand = spawn(process.env.AgentPath + 'git pull');
                             GitUpdateCommand.stdout.on('data', (data) => {
                                 console.log(`stdout: ${data}`);
+                            });
+                            GitUpdateCommand.stderr.on('data', (data) => {
+                                console.error(`stderr: ${data}`);
+                              });
+                              
+                              GitUpdateCommand.on('close', (code) => {
+                                console.log(`child process exited with code ${code}`);
                               });
                         }else{
                             logger('error', 'Unknown Path to update');
