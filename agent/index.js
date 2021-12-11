@@ -22,7 +22,7 @@ setInterval(function(){
                     currentrunningtask[task.uuid] = "1";
                     if(task.task.toLowerCase() == "start"){
                         PM2.Start(task.pm2id).then(function(data){
-                            Tasks.ACKTask(task.uuid, "Succsess").then(function(ack){
+                            Tasks.ACKTask(task.uuid, "Success").then(function(ack){
                                 logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
                                 delete currentrunningtask[task.uuid];
                             }).catch(function(err){
@@ -38,7 +38,7 @@ setInterval(function(){
                         });
                     }else if(task.task.toLowerCase() == "stop"){
                         PM2.Stop(task.pm2id).then(function(data){
-                            Tasks.ACKTask(task.uuid, "Succsess").then(function(ack){
+                            Tasks.ACKTask(task.uuid, "Success").then(function(ack){
                                 logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
                                 delete currentrunningtask[task.uuid];
                             }).catch(function(err){
@@ -54,7 +54,7 @@ setInterval(function(){
                         });
                     }else if(task.task.toLowerCase() == "restart"){
                         PM2.Restart(task.pm2id).then(function(data){
-                            Tasks.ACKTask(task.uuid, "Succsess").then(function(ack){
+                            Tasks.ACKTask(task.uuid, "Success").then(function(ack){
                                 logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
                                 delete currentrunningtask[task.uuid];
                             }).catch(function(err){
@@ -70,7 +70,7 @@ setInterval(function(){
                         });
                     }else if(task.task.toLowerCase() == "reload"){
                         PM2.Reload(task.pm2id).then(function(data){
-                            Tasks.ACKTask(task.uuid, "Succsess").then(function(ack){
+                            Tasks.ACKTask(task.uuid, "Success").then(function(ack){
                                 logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
                                 delete currentrunningtask[task.uuid];
                             }).catch(function(err){
@@ -86,7 +86,7 @@ setInterval(function(){
                         });
                     }else if(task.task.toLowerCase() == "delete"){
                         PM2.Delete(task.pm2id).then(function(data){
-                            Tasks.ACKTask(task.uuid, "Succsess").then(function(ack){
+                            Tasks.ACKTask(task.uuid, "Success").then(function(ack){
                                 logger('info', `Task ${task.uuid} acknowledged type: ${task.task}`);
                                 delete currentrunningtask[task.uuid];
                             }).catch(function(err){
