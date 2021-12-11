@@ -1,7 +1,7 @@
 const PM2 = require('../lib/pm2_ctl/pm2');
 const {Processes, Tasks} = require('../lib/db/postgress');
 const {logger} = require('../lib/logger');
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 
 //Object to store all currently in progress Tasks, before ack. Object used for the speed.
 let currentrunningtask = {};
@@ -24,11 +24,10 @@ setInterval(function(){
                     const TaskParser = task.task.toLowerCase().split('_');
                     if(TaskParser[0] == "update"){
                         if(TaskParser[1] == "process"){
-                            const GitUpdateCommand = spawn('git pull');
+                            const GitUpdateCommand = exec('git pull');
                         }else if(TaskParser[1] == "agent"){
-                            const GitUpdateCommand = spawn('git pull');
-                            GitUpdateCommand.stdout.on('data', (data) => {
-                                console.log(`stdout: ${data}`);
+                            exec('git pull', (err, stdout, stderr) => {
+                                console.log(err, stdout, stderr);
                             });
                         }else{
                             logger('error', 'Unknown Path to update');
