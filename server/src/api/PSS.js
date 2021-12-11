@@ -47,13 +47,23 @@ router.get('/list', limiter, async (reg, res, next) => {
 				element.mem = bytesToSize(element.mem, 2, 1);
 				element.cpu = element.cpu.toFixed(2);
 				element.uptime = uptimetohuman(element.uptime, element.state);
+				if(element.os !== "Windows_NT"){
+					element.os === "Linux";
+				}
 				if(element.state === "online") {
 					element.state = "✅";
 				} else {
 					element.state = "❌";
 				}
 
-				element.actions = `<button title="Reload" onclick="ReloadServer('${element.pm2id}', '${element.server}')">💫</button>` + `<button title="Restart" onclick="RestartServer('${element.pm2id}', '${element.server}')">🔄</button>` + `<button title="Stop" onclick="StopServer('${element.pm2id}', '${element.server}')">❌</button>`;
+				if(element.type === "agent") {
+					element.actions = `<button title="Reload" onclick="ReloadServer('${element.pm2id}', '${element.server}')">💫</button>` + `<button title="Restart" onclick="RestartServer('${element.pm2id}', '${element.server}')">🔄</button>`;
+				}else{
+					element.actions = `<button title="Reload" onclick="ReloadServer('${element.pm2id}', '${element.server}')">💫</button>` + `<button title="Restart" onclick="RestartServer('${element.pm2id}', '${element.server}')">🔄</button>` + `<button title="Stop" onclick="StopServer('${element.pm2id}', '${element.server}')">❌</button>`;
+				}
+
+				
+				//element.actions = ``;
 			});
 
 			res.send(data.rows);
