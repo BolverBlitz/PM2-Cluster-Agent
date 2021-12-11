@@ -73,6 +73,8 @@ router.post("/restart", limiter, async (reg, res, next) => {
 						logger('info', `${PluginName}: ${task_id} was acknowledged with ${task_done.rows[0].status_completed}`);
 						res.status(200);
                         res.json({
+							server: value.Server,
+							pm2id: value.pm2id,
 							status: task_done.rows[0].status_completed,
                         });
 					}
@@ -109,6 +111,8 @@ router.post("/reload", limiter, async (reg, res, next) => {
 						logger('info', `${PluginName}: ${task_id} was acknowledged with ${task_done.rows[0].status_completed}`);
 						res.status(200);
 						res.json({
+							server: value.Server,
+							pm2id: value.pm2id,
 							status: task_done.rows[0].status_completed,
 						});
 					}
@@ -144,6 +148,8 @@ router.post("/stop", limiter, async (reg, res, next) => {
 						logger('info', `${PluginName}: ${task_id} was acknowledged with ${task_done.rows[0].status_completed}`);
 						res.status(200);
 						res.json({
+							server: value.Server,
+							pm2id: value.pm2id,
 							status: task_done.rows[0].status_completed,
 						});
 					}

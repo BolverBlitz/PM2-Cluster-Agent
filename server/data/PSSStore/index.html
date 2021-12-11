@@ -379,6 +379,13 @@ function RestartServer(pm2id, server) {
 
     posting.done(function(data) {
         setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `Restart: Acknowledgment ${data.status}: <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "success",
+        });
     });
 
     posting.fail(function(err) {
@@ -401,6 +408,13 @@ function ReloadServer(pm2id, server) {
 
     posting.done(function(data) {
         setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `Reload: Acknowledgment ${data.status}: <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "success",
+        });
     });
 
     posting.fail(function(err) {
@@ -423,6 +437,13 @@ function StopServer(pm2id, server) {
 
     posting.done(function(data) {
         setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `Stop: Acknowledgment ${data.status}: <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "success",
+        });
     });
 
     posting.fail(function(err) {
