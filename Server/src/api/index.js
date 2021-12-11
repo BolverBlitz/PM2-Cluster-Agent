@@ -55,7 +55,6 @@ fs.readdir("./server/src/api", function(err, filenames) {
           router.use(`/${name}`, iimport.router);
           logger('system',`Loaded API Plugin ${filenames[i].slice(0, filenames[i].length-3)}`);
         }else{
-          console.log('[API.Plugins] \x1b[31m[ER]\x1b[0m',``)
           logger('error',`API Plugin ${filenames[i].slice(0, filenames[i].length-3)}} requires following plugins [${iimport.PluginRequirements}] and at least one is missing!`);
         }
       }
