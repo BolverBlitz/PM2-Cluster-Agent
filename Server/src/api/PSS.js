@@ -77,14 +77,18 @@ router.post("/restart", limiter, async (reg, res, next) => {
                         });
 					}
 				}).catch(function(err){
-					console.log(err);
+					logger('error', `${PluginName}: ${task_id} could not be deleted`);
 				});
 			}).catch(function(err){
-				console.log(err);
+				logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+				res.status(510);
+                res.json({
+					error: "Timeout",
+                });
 			});
 		
 		}).catch(function(err){
-			console.log(err);
+			logger('error', `${PluginName}: ${task_id} could not be created`);
 		});
     } catch (error) {
         next(error);
@@ -105,13 +109,17 @@ router.post("/reload", limiter, async (reg, res, next) => {
 						});
 					}
 				}).catch(function(err){
-					console.log(err);
+					logger('error', `${PluginName}: ${task_id} could not be deleted`);
 				});
 			}).catch(function(err){
-				console.log(err);
+				logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+				res.status(510);
+                res.json({
+					error: "Timeout",
+                });
 			});
 		}).catch(function(err){
-			console.log(err);
+			logger('error', `${PluginName}: ${task_id} could not be created`);
 		});
     } catch (error) {
         next(error);
@@ -132,13 +140,17 @@ router.post("/stop", limiter, async (reg, res, next) => {
 						});
 					}
 				}).catch(function(err){
-					console.log(err);
+					logger('error', `${PluginName}: ${task_id} could not be deleted`);
 				});
 			}).catch(function(err){
-				console.log(err);
+				logger('warning', `${PluginName}: ${task_id} was not acknowledged and timed out`);
+				res.status(510);
+                res.json({
+					error: "Timeout",
+                });
 			});
 		}).catch(function(err){
-			console.log(err);
+			logger('error', `${PluginName}: ${task_id} could not be created`);
 		});
     } catch (error) {
         next(error);

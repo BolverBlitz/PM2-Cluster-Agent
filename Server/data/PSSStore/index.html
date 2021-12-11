@@ -385,7 +385,7 @@ function RestartServer(pm2id, server) {
     });
 
     posting.fail(function(err) {
-        alert(err)
+        console.log(err.responseJSON.error)
     });
 
 }
@@ -401,7 +401,7 @@ function ReloadServer(pm2id, server) {
     });
 
     posting.fail(function(err) {
-        alert(err)
+        console.log(err.responseJSON.error)
     });
 
 }
@@ -417,7 +417,7 @@ function StopServer(pm2id, server) {
     });
 
     posting.fail(function(err) {
-        alert(err)
+        console.log(err.responseJSON.error)
     });
 
 }
