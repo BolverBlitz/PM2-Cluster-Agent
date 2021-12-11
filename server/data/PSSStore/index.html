@@ -323,7 +323,7 @@ function InitTable () {
     var posting = $.get(`${window.location.href}/list`);
 		posting.done(function(data) {
             let TableObject = {
-                TableHeadData: ["server","type", "name", "cpu", "mem", "os", "uptime", "state" , "actions"],
+                TableHeadData: ["server","type", "name", "cpu", "mem", "os", "uptime", "state" , "actions", "operations"],
                 TableData: data
             }
                 $("#container").html(CreateTable(TableObject));
@@ -371,6 +371,34 @@ function CreateTable({ TableHeadData, TableData }) {
 	return `${TableString}${TableBody.join("")}${TableEnd}`
 }
 /* Function for Buttons */
+function DeleteDB(pm2id, server) {
+    var posting = $.post(`${window.location.href}/dbdelete`, {
+    pm2id: pm2id,
+    Server: server
+  });
+
+    posting.done(function(data) {
+      setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `DeleteDB: Deleted Prosess: <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "success",
+        });
+    });
+
+  posting.fail(function(err) {
+    SnackBar({
+            message: `DeleteDB: Failed to delete Prosess: <br>${err.responseJSON.server}.${err.responseJSON.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "danger",
+        });
+  });
+}
+
 function RestartServer(pm2id, server) {
     var posting = $.post(`${window.location.href}/restart`, {
         pm2id: pm2id,
@@ -378,6 +406,16 @@ function RestartServer(pm2id, server) {
     });
 
     posting.done(function(data) {
+      if(data && data.status === "{}"){
+        setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `Error: Does not exist <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "danger",
+        });
+      }else{
         setTimeout(InitTable, 1100);
         SnackBar({
             message: `Restart: Acknowledgment ${data.status}: <br>${data.server}.${data.pm2id}`,
@@ -386,6 +424,7 @@ function RestartServer(pm2id, server) {
             position: Global.SnackBox_Location,
             status: "success",
         });
+      }
     });
 
     posting.fail(function(err) {
@@ -407,6 +446,16 @@ function ReloadServer(pm2id, server) {
     });
 
     posting.done(function(data) {
+      if(data && data.status === "{}"){
+        setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `Error: Does not exist <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "danger",
+        });
+      }else{
         setTimeout(InitTable, 1100);
         SnackBar({
             message: `Reload: Acknowledgment ${data.status}: <br>${data.server}.${data.pm2id}`,
@@ -415,6 +464,7 @@ function ReloadServer(pm2id, server) {
             position: Global.SnackBox_Location,
             status: "success",
         });
+      }
     });
 
     posting.fail(function(err) {
@@ -436,6 +486,16 @@ function StopServer(pm2id, server) {
     });
 
     posting.done(function(data) {
+      if(data && data.status === "{}"){
+        setTimeout(InitTable, 1100);
+        SnackBar({
+            message: `Error: Does not exist <br>${data.server}.${data.pm2id}`,
+            width: "400px",
+            speed: Global.SnackBox_Timeout,
+            position: Global.SnackBox_Location,
+            status: "danger",
+        });
+      }else{
         setTimeout(InitTable, 1100);
         SnackBar({
             message: `Stop: Acknowledgment ${data.status}: <br>${data.server}.${data.pm2id}`,
@@ -444,6 +504,7 @@ function StopServer(pm2id, server) {
             position: Global.SnackBox_Location,
             status: "success",
         });
+      }
     });
 
     posting.fail(function(err) {

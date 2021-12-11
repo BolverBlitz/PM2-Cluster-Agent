@@ -48,8 +48,13 @@ router.get('/list', limiter, async (reg, res, next) => {
 				element.cpu = element.cpu.toFixed(2);
 				element.uptime = uptimetohuman(element.uptime, element.state);
 				if(element.os !== "Windows_NT"){
-					element.os === "Linux";
+					element.os = "Linux";
+				}else if(element.os === "Windows_NT"){
+					element.os = "Windows";
+				}else{
+					element.os = "Unknown";
 				}
+				
 				if(element.state === "online") {
 					element.state = "✅";
 				} else {
@@ -63,7 +68,7 @@ router.get('/list', limiter, async (reg, res, next) => {
 				}
 
 				
-				//element.actions = ``;
+				element.operations = `<button title="Delete from DB" onclick="DeleteDB('${element.pm2id}', '${element.server}')">🗑</button>` + `<button title="Pull Update" onclick="GitUpdate('${element.pm2id}', '${element.server}')">♻️</button>`;
 			});
 
 			res.send(data.rows);
@@ -71,6 +76,25 @@ router.get('/list', limiter, async (reg, res, next) => {
 	} catch (error) {
     	next(error);
   	}
+});
+
+router.post("/dbdelete", limiter, async (reg, res, next) => {
+    try {
+        const value = await CommandShema.validateAsync(reg.body);
+		Processes.Delete(value.Server, value.pm2id).then(data => {
+			console.log(data)
+			res.status(200);
+            res.json({
+				server: value.Server,
+				pm2id: value.pm2id,
+				status: "Success",
+            });
+		}).catch(function(err){
+			logger('error', `${PluginName}: Failed to delete process from DB.`);
+		});
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.post("/restart", limiter, async (reg, res, next) => {
