@@ -323,7 +323,7 @@ function InitTable () {
     var posting = $.get(`${window.location.href}/list`);
 		posting.done(function(data) {
             let TableObject = {
-                TableHeadData: ["server","type", "name", "cpu", "mem", "os", "uptime", "state" , "actions", "operations"],
+                TableHeadData: ["server","type", "name", "cpu", "mem", "os", "uptime", "state", "queryspersec" , "actions", "operations"],
                 TableData: data
             }
                 $("#container").html(CreateTable(TableObject));

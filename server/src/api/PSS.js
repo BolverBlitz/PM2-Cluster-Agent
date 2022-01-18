@@ -67,6 +67,10 @@ router.get('/list', limiter, async (reg, res, next) => {
 					element.state = "❌";
 				}
 
+				if( element.queryspersec === null) {
+					element.queryspersec = "N/A";
+				}
+
 				if(element.type === "agent") {
 					element.actions = `<button title="Reload" onclick="ReloadServer('${element.pm2id}', '${element.server}')">💫</button>` + `<button title="Restart" onclick="RestartServer('${element.pm2id}', '${element.server}')">🔄</button>`;
 				}else{
